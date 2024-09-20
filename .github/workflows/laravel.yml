@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env: 
-      APP_KEY: APP_KEY=base64:BVenqj0PaN1E2oj4caslR0IlqFhKcmXhhCqRtvSISUo=
+      APP_KEY: base64:S6cwOxUXibYh+JuIf2fJFGKJdh6j1DuNfwWYGqu8f/U=
 
     steps:
       - name: Checkout code
