@@ -1,0 +1,36 @@
+name: Laravel CI
+
+on:
+  push:
+    branches:
+      - master  # Change to your default branch
+  pull_request:
+    branches:
+      - master  # Change to your default branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, bcmath, gd, curl
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run Laravel Pint
+        run: composer exec pint
+
+      - name: Run PHPStan
+        run: composer exec phpstan analyse
+
+      - name: Run Tests
+        run: php artisan test
