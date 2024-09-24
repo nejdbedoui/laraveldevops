@@ -27,7 +27,7 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
 COPY . .
 
 # Install Composer dependencies
-RUN RUN composer install --no-interaction --prefer-dist --optimize-autoloader -vvv
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader -vvv
 
 # Install Node.js dependencies
 RUN npm install
