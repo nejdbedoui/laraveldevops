@@ -12,11 +12,12 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     unzip \
     git \
+    curl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd zip pdo pdo_mysql
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Install Composer directly from the official installer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install Node.js (for asset compilation)
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
