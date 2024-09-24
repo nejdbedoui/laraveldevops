@@ -1,5 +1,6 @@
 FROM php:8.2-fpm
-
+ARG user=appuser
+ARG uid=1000
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
