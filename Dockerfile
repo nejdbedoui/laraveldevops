@@ -1,42 +1,45 @@
-# Use the official PHP image as a base
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
-# Set working directory
-WORKDIR /var/www
+ARG user
+ARG uid
 
-# Install system dependencies and PHP extensions
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    unzip \
     git \
     curl \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd zip pdo pdo_mysql
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    supervisor \
+    nginx \
+    build-essential \
+    openssl
 
-# Install Composer directly from the official installer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN docker-php-ext-install gd pdo pdo_mysql sockets
 
-# Install Node.js (for asset compilation)
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
-    apt-get install -y nodejs
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy the existing application directory contents
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
+
+WORKDIR /var/www
+
+# If you need to fix ssl
+COPY ./openssl.cnf /etc/ssl/openssl.cnf
+
+COPY composer.json composer.lock ./
+RUN composer install
+
 COPY . .
 
-# Install Composer dependencies
-RUN composer install 
-
-# Install Node.js dependencies
-RUN npm install
-
-# Build assets
-RUN npm run build
-
+RUN chown -R $uid:$uid /var/www
 # Expose the port the app runs on
+CMD php artisan serve
+
 EXPOSE 9000
 
-# Start the PHP-FPM server
-CMD ["php-fpm"]
