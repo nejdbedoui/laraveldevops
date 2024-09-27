@@ -73,5 +73,5 @@ jobs:
             context: .
             file: ./Dockerfile
             push: true
-            tags: Laravel
-            labels: Laravel
+            tags: laravel_recycle
+            labels: laravel_recycle
