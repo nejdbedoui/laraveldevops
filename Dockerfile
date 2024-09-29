@@ -21,6 +21,5 @@ RUN composer install
 # Command to run your application
 CMD php artisan serve --host=0.0.0.0 --port=8181
 
-
 # Expose the port for the application
 EXPOSE 8181
