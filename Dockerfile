@@ -30,6 +30,7 @@ WORKDIR /var/www
 COPY composer.json composer.lock ./
 RUN composer install
 
+
 COPY . .
 
 RUN chown -R $uid:$uid /var/www
